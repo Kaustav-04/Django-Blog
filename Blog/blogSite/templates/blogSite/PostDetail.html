@@ -1,0 +1,25 @@
+{% extends 'Base.html' %} 
+{% load static %} 
+
+{% block title %} 
+{{postData.slug }}
+{% endblock %} 
+
+{% block css %} 
+<link rel="stylesheet" href="{% static "blogSite/PostDetail.css" %}" /> 
+{% endblock %} 
+
+{% block body %}
+<section id="summary">
+  <h2>{{postData.title|title}}</h2>
+  <article>
+    <img src="{% static "blogSite/images/"|add:postData.image %}" alt="Post Title" />
+    <address>By {{postData.author}}</address>
+    <div>Last updated on <time>{{postData.date}}</time></div>
+  </article>
+</section>
+
+<main>
+  {{postData.content}}
+</main>
+{% endblock %}
