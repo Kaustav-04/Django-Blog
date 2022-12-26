@@ -10,10 +10,37 @@
 {% endblock %} 
 
 {% block body %}
+
+{% if comment_form.errors %}
+  <div id="alert">
+    <h2>Saving the comment failed!</h2>
+    <p>Please check the comment form below the post and fix your erros.</p>
+    <a href="#comment-form">Fix!</a>
+  </div>
+{% endif %}
+
 <section id="summary">
   <h2>{{postData.title|title}}</h2>
+  <div>
+    {% for tag in tags %}
+      <span class="tag">{{ tag.caption }}</span>
+    {% endfor %}
+  </div>
+  <div id="read-later">
+    <form action="{% url "read-later" %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" value="{{ postData.id }}" name="post_id">
+      <button>
+        {% if saved_for_later %}
+          Remove from "Read Later" List
+        {% else %}
+          Read Later
+        {% endif %}
+      </button>
+    </form>
+  </div>
   <article>
-    <img src="{% static "blogSite/images/"|add:postData.image %}" alt="Post Title" />
+    <img src="{{postData.image.url}}" alt="Post Title" />
     <address>By {{postData.author}}</address>
     <div>Last updated on <time>{{postData.date}}</time></div>
   </article>
@@ -22,4 +49,30 @@
 <main>
   {{postData.content}}
 </main>
+
+<section id="comments">
+  <ul>
+    {% for comment in comments %}
+      <li>
+        <h2>{{ comment.name }}</h2>
+        <p>{{ comment.comment|linebreaks }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section id="comment-form">
+  <h2>Your Comment</h2>
+  <form action="{% url "Post-Details" postData.slug %}" method="POST">
+    {% csrf_token %}
+    {% for form_field in form %}
+      <div class="form-control {% if form_field.errors %}invalid{% endif %}">
+        {{ form_field.label_tag }}
+        {{ form_field }}
+        {{ form_field.errors }}
+      </div>
+    {% endfor %}
+    <button id='button'>Save Comment</button>
+  </form>
+</section>
 {% endblock %}

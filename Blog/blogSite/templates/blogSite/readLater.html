@@ -1,0 +1,30 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+{% block title %} 
+All Posts
+{% endblock %} 
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "blogSite/posts.css" %}" />
+  <link rel="stylesheet" href="{% static "blogSite/all-posts.css" %}" />
+{% endblock %}
+
+{% block body %}
+<section id="all-posts">
+  <h2>My Collected Posts</h2>
+
+  {% if has_post %}
+  <ul>
+    {% for post in Posts %}
+    <li><a href="{% url 'Post-Details' post.slug %}"">
+        <h2>{{post.title|title}}</h2>
+        <h4>{{post.author}}</h4>
+    </a></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <h3>No post saved for read later</h3>
+  {% endif %}
+</section>
+{% endblock %}

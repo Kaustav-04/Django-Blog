@@ -28,10 +28,16 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=150)
     date = models.DateField(auto_now=True)
-    image = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='posts', null=True)
     excerpt = models.CharField(max_length=200)
     content = models.TextField(max_length=300)
     slug = models.SlugField(unique=True, db_index=True)
     author = models.ForeignKey(
         Author, on_delete=models.SET_NULL,null=True, related_name='posts')
     tags = models.ManyToManyField(Tag)
+
+class Comment(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    comment = models.TextField(max_length=400)
+    post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='comment')
