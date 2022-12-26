@@ -34,7 +34,7 @@ def PostDetails(req, slug):
         #         pass
         saved_for_later = False
         if stored_post:
-            if requiredPost.id in stored_post:
+            if str(requiredPost.id) in stored_post:
                 saved_for_later = True
 
         return render(req, 'blogSite/PostDetail.html', {
@@ -53,10 +53,7 @@ def PostDetails(req, slug):
             comment.post = post
             comment.save()
 
-        saved_for_later = False
-        if stored_post:
-            if post.id in stored_post:
-                saved_for_later = True
+
 
         return render(req, 'blogSite/PostDetail.html', {
             'postData': post,
@@ -69,7 +66,7 @@ def PostDetails(req, slug):
 def readLater(req):
     stored_post = req.session.get('stored_post')
     if req.method == 'GET':
-        if (stored_post is None) or len(stored_post) == 0:
+        if (stored_post is None) or (len(stored_post) == 0):
             has_post = False
             return render(req, 'blogSite/readLater.html', {
                 'Posts': [],
